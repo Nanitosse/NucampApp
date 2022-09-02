@@ -1,22 +1,23 @@
 
 import DirectoryScreen from './DirectoryScreen';
-import { Platform, View , Text,Image} from 'react-native';
+import { Platform, View, Text, Image } from 'react-native';
 import Constants from 'expo-constants';
 import { createStackNavigator } from '@react-navigation/stack';
 import CampsiteInfoScreen from './CampsiteInfoScreen';
-import { createDrawerNavigator,DrawerContentScrollView,DrawerItemList } from '@react-navigation/drawer';
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import HomeScreen from './HomeScreen';
 import AboutScreen from './AboutScreen';
 import ContactScreen from './ContactScreen';
 import { StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
-import logo  from '../assets/images/logo.png'
+import logo from '../assets/images/logo.png'
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { fetchPartners } from '../features/partners/partnersSlice';
 import { fetchCampsites } from '../features/campsites/campsitesSlice';
 import { fetchPromotions } from '../features/promotions/promotionsSlice';
 import { fetchComments } from '../features/comments/commentsSlice';
+import ReservationScreen from './ReservationScreen';
 
 
 
@@ -144,33 +145,55 @@ const ContactNavigator = () => {
     )
 
 }
+const ReservationNavigator = () => {
+    const Stack = createStackNavigator();
+    return (
+        <Stack.Navigator screenOptions={screenOptions}>
+            <Stack.Screen
+                name='Reservation'
+                component={ReservationScreen}
+                options={({ navigation }) => ({
+                    title: 'Reservation Search',
+                    headerLeft: () => (
+                        <Icon
+                            name='tree'
+                            type='font-awesome'
+                            iconStyle={styles.stackIcon}
+                            onPress={() => navigation.toggleDrawer()}
+                        />
+                    )
+                })}
+            />
+        </Stack.Navigator>
+    );
+};
 
 
-const CustomDrawerContent = (props)=>(
+const CustomDrawerContent = (props) => (
     <DrawerContentScrollView {...props}>
         <View style={styles.drawerHeader}>
-            <View style={{flex:1}}>
-              <Image source={logo} style={styles.drawerImage} />
+            <View style={{ flex: 1 }}>
+                <Image source={logo} style={styles.drawerImage} />
             </View>
-            <View style={{flex:2}}>
+            <View style={{ flex: 2 }}>
                 <Text style={styles.drawerHeaderText}>Nucamp</Text>
             </View>
         </View>
-        <DrawerItemList {...props} labelStyle={{fontWeight:'bold'}}/>
+        <DrawerItemList {...props} labelStyle={{ fontWeight: 'bold' }} />
     </DrawerContentScrollView>
 
 
 
 )
 const Main = () => {
-    const dispatch =useDispatch();
-    
-    useEffect(()=>{
+    const dispatch = useDispatch();
+
+    useEffect(() => {
         dispatch(fetchCampsites());
         dispatch(fetchPromotions());
-        dispatch (fetchPartners());
+        dispatch(fetchPartners());
         dispatch(fetchComments());
-    },[dispatch]);
+    }, [dispatch]);
 
 
     return (
@@ -193,6 +216,22 @@ const Main = () => {
 
                 />
                 <Drawer.Screen
+                    name='ReserveCampsite'
+                    component={ReservationNavigator}
+                    options={{
+                        title: 'Reserve Campsite',
+                        drawerIcon: ({ color }) => (
+                            <Icon
+                                name='tree'
+                                type='font-awesome'
+                                size={24}
+                                iconStyle={{ width: 24 }}
+                                color={color}
+                            />
+                        )
+                    }}
+                />
+                <Drawer.Screen
                     name='About'
                     component={AboutNavigator}
                 />
@@ -211,23 +250,23 @@ const Main = () => {
 
 const styles = StyleSheet.create({
 
-    drawerHeader:{
+    drawerHeader: {
         backgroundColor: '#5637DD',
         height: 140,
-        alignItems:'center',
-        justifyContent:"center",
-        flex:1,
-        flexDirection:'row'
+        alignItems: 'center',
+        justifyContent: "center",
+        flex: 1,
+        flexDirection: 'row'
     },
-    drawerHeaderText : {
-        color:'#fff',
-        fontSize:24,
-        fontWeight:'bold'
+    drawerHeaderText: {
+        color: '#fff',
+        fontSize: 24,
+        fontWeight: 'bold'
     },
-    drawerImage:{
-        margin:10,
+    drawerImage: {
+        margin: 10,
         height: 60,
-        width:60
+        width: 60
     },
     stackIcon: {
         marginLeft: 10,
