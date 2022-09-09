@@ -119,10 +119,6 @@ const ReservationScreen = () => {
     )
 
 
-
-
-
-
 };
 
 const styles = StyleSheet.create({
