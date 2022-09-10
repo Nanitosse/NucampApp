@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { toggleFavorite } from '../features/favorites/favoritesSlice';
 import { Rating, Input, } from 'react-native-elements';
 import { postComment } from '../features/comments/commentsSlice';
+import  * as Animatable from 'react-native-animatable';
 
 
 
@@ -93,7 +94,13 @@ const renderCommentItem = ({ item }) => {
 }
 
     return (
-        <>
+        
+        <Animatable.View
+            animation='fadeInUp'
+            duration={2000}
+            delay={1000}
+        >
+        
             <FlatList
                 data={comments.commentsArray.filter((comment) => comment.campsiteId === campsite.id)}
                 renderItem={renderCommentItem}
@@ -172,7 +179,8 @@ const renderCommentItem = ({ item }) => {
                 </View>
 
             </Modal>
-        </>
+            
+        </Animatable.View>
 
 
 

@@ -1,19 +1,20 @@
-import { FlatList,Text,View } from "react-native";
+import { FlatList, Text, View } from "react-native";
 import { useSelector } from "react-redux";
 import { baseUrl } from "../shared/baseUrl";
-import { Tile} from "react-native-elements";
+import { Tile } from "react-native-elements";
 import Loading from "../components/LoadingComponent";
+import * as Animatable from 'react-native-animatable';
 
 
 const DirectoryScreen = ({ navigation }) => {
     const campsites = useSelector((state) => state.campsites);
-    if(campsites.isLoading){
-        return(
-            <Loading/>
+    if (campsites.isLoading) {
+        return (
+            <Loading />
         )
     }
-    if(campsites.errMess){
-        return(
+    if (campsites.errMess) {
+        return (
             <View>
                 <Text>{campsites.errMess}</Text>
             </View>
@@ -23,13 +24,20 @@ const DirectoryScreen = ({ navigation }) => {
 
     const renderDirectoryItem = ({ item: campsite }) => {
         return (
-            <Tile
-                onPress={() => navigation.navigate("CampsiteInfo", { campsite })}
-                title={campsite.name}
-                caption={campsite.description}
-                featured
-                imageSrc={{uri:baseUrl + campsite.image}}
-            />
+
+            <Animatable.View
+                animation='fadeInRightBig'
+                duration={2000}
+                
+            >
+                <Tile
+                    onPress={() => navigation.navigate("CampsiteInfo", { campsite })}
+                    title={campsite.name}
+                    caption={campsite.description}
+                    featured
+                    imageSrc={{ uri: baseUrl + campsite.image }}
+                />
+            </Animatable.View>
 
         )
     }
