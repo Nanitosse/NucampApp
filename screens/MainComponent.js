@@ -19,6 +19,7 @@ import { fetchPromotions } from '../features/promotions/promotionsSlice';
 import { fetchComments } from '../features/comments/commentsSlice';
 import ReservationScreen from './ReservationScreen';
 import FavoritesScreen from './FavoritesScreen';
+import LoginScreen from './LoginScreen';
 
 
 
@@ -193,6 +194,29 @@ const FavoritesNavigator = () => {
 };
 
 
+const LoginNavigator = () => {
+    const Stack = createStackNavigator();
+    return (
+        <Stack.Navigator screenOptions={screenOptions}>
+            <Stack.Screen
+                name='Login'
+                component={LoginScreen}
+                options={({ navigation }) => ({
+                    headerLeft: () => (
+                        <Icon
+                            name='sign-in'
+                            type='font-awesome'
+                            iconStyle={styles.stackIcon}
+                            onPress={() => navigation.toggleDrawer()}
+                        />
+                    )
+                })}
+            />
+        </Stack.Navigator>
+    );
+};
+
+
 
 const CustomDrawerContent = (props) => (
     <DrawerContentScrollView {...props}>
@@ -229,10 +253,26 @@ const Main = () => {
                 drawerStyle={{ backgroundColor: '#CEC8FF' }}
             >
                 <Drawer.Screen
+                    name='Login'
+                    component={LoginNavigator}
+                    options={{
+                        drawerIcon: ({ color }) => (
+                            <Icon
+                                name='sign-in'
+                                type='font-awesome'
+                                size={24}
+                                iconStyle={{ width: 24 }}
+                                color={color}
+                            />
+                        )
+                    }}
+
+                />
+                <Drawer.Screen
                     name='Home'
                     component={HomeNavigator}
-                    options={{ 
-                        title:'Home',
+                    options={{
+                        title: 'Home',
                         drawerIcon: ({ color }) => (
                             <Icon
                                 name='home'
@@ -241,7 +281,7 @@ const Main = () => {
                                 iconStyle={{ width: 24 }}
                                 color={color}
                             />
-                        ) 
+                        )
                     }}
 
                 />
@@ -249,7 +289,7 @@ const Main = () => {
                     name='Directory'
                     component={DirectoryNavigator}
                     options={{
-                        title:"Directory",
+                        title: "Directory",
                         drawerIcon: ({ color }) => (
                             <Icon
                                 name='bars'
@@ -258,11 +298,11 @@ const Main = () => {
                                 iconStyle={{ width: 24 }}
                                 color={color}
                             />
-                        ) 
+                        )
 
-                     }}
-                   
-                
+                    }}
+
+
 
                 />
                 <Drawer.Screen
