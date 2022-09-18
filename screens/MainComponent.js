@@ -1,6 +1,6 @@
 
 import DirectoryScreen from './DirectoryScreen';
-import { Platform, View, Text, Image } from 'react-native';
+import { Platform, View, Text, Image, StyleSheet, Alert, ToastAndroid } from 'react-native';
 import Constants from 'expo-constants';
 import { createStackNavigator } from '@react-navigation/stack';
 import CampsiteInfoScreen from './CampsiteInfoScreen';
@@ -8,7 +8,6 @@ import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '
 import HomeScreen from './HomeScreen';
 import AboutScreen from './AboutScreen';
 import ContactScreen from './ContactScreen';
-import { StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
 import logo from '../assets/images/logo.png'
 import { useDispatch } from 'react-redux';
@@ -21,6 +20,7 @@ import ReservationScreen from './ReservationScreen';
 import FavoritesScreen from './FavoritesScreen';
 import LoginScreen from './LoginScreen';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import NetInfo from '@react-native-community/netinfo';
 
 
 
@@ -202,15 +202,15 @@ const LoginNavigator = () => {
             <Stack.Screen
                 name='Login'
                 component={LoginScreen}
-                options={({ navigation,route }) => ({
+                options={({ navigation, route }) => ({
                     headerTitle: getFocusedRouteNameFromRoute(route),
                     headerLeft: () => (
                         <Icon
                             name={
-                                getFocusedRouteNameFromRoute(route)===
-                                "Register"
-                                ? 'user-plus'
-                                : 'sign-in'
+                                getFocusedRouteNameFromRoute(route) ===
+                                    "Register"
+                                    ? 'user-plus'
+                                    : 'sign-in'
                             }
                             type='font-awesome'
                             iconStyle={styles.stackIcon}
@@ -240,16 +240,57 @@ const CustomDrawerContent = (props) => (
 
 
 
-)
+);
 const Main = () => {
     const dispatch = useDispatch();
-
     useEffect(() => {
         dispatch(fetchCampsites());
         dispatch(fetchPromotions());
         dispatch(fetchPartners());
         dispatch(fetchComments());
     }, [dispatch]);
+    useEffect(() => {
+        showNetInfo();
+        const unsubscribeNetInfo = NetInfo.addEventListener(
+            (connectionInfo) => {
+                handleConnectivityChange(connectionInfo);
+            }
+        );
+
+        return unsubscribeNetInfo;
+        
+    }, []);
+
+    const showNetInfo = async () => {
+        const  connectionInfo= await NetInfo.fetch();
+            Platform.OS==='ios'? Alert.alert("Initial Network Connectivity type:", connectionInfo.type)
+            :ToastAndroid.show("Initial Network Connectivity type:" + ToastAndroid.LONG)
+ 
+    };
+
+    const handleConnectivityChange = (connectionInfo) => {
+        let connectionMsg = 'You are now connected to an active  network';
+        switch (connectionInfo.type) {
+            case 'none':
+                connectectionMsg = 'No network connection is active';
+                break;
+            case 'unknown':
+                connectectionMsg = 'the network connection state is now unknown';
+                break;
+            case 'celular':
+                connectectionMsg = ' you are know connected to a celular network ';
+                break;
+            case 'wifi':
+                connectectionMsg = ' you are know connected to a wifi network ';
+                break;
+
+        }
+        Platform.OS === 'ios'
+            ? Alert.alert('Connection change:', connectionMsg)
+            : ToastAndroid.show(connectionMsg, ToastAndroid.LONG)
+
+    };
+
 
 
     return (

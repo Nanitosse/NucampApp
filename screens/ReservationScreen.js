@@ -87,7 +87,7 @@ const ReservationScreen = () => {
     return (
         <ScrollView>
             <Animatable.View
-                animation='fadeInDown'
+                animation='zoomIn'
                 duration={2000}
                 delay={1000}
             >
